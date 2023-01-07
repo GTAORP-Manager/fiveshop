@@ -1,0 +1,525 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model addon_account {
+  name   String @id @db.VarChar(60)
+  label  String @db.VarChar(100)
+  shared Int
+}
+
+model addon_account_data {
+  id           Int     @id @default(autoincrement())
+  account_name String? @db.VarChar(100)
+  money        Int
+  owner        String? @db.VarChar(46)
+
+  @@unique([account_name, owner], map: "index_addon_account_data_account_name_owner")
+  @@index([account_name], map: "index_addon_account_data_account_name")
+}
+
+model addon_inventory {
+  name   String @id @db.VarChar(60)
+  label  String @db.VarChar(100)
+  shared Int
+}
+
+model addon_inventory_items {
+  id             Int     @id @default(autoincrement())
+  inventory_name String  @db.VarChar(100)
+  name           String  @db.VarChar(100)
+  count          Int
+  owner          String? @db.VarChar(46)
+
+  @@index([inventory_name], map: "index_addon_inventory_inventory_name")
+  @@index([inventory_name, name], map: "index_addon_inventory_items_inventory_name_name")
+  @@index([inventory_name, name, owner], map: "index_addon_inventory_items_inventory_name_name_owner")
+}
+
+model billing {
+  id          Int     @id @default(autoincrement())
+  identifier  String? @db.VarChar(46)
+  sender      String  @db.VarChar(60)
+  target_type String  @db.VarChar(50)
+  target      String  @db.VarChar(40)
+  label       String  @db.VarChar(255)
+  amount      Int
+}
+
+model cardealer_vehicles {
+  id      Int    @id @default(autoincrement())
+  vehicle String @db.VarChar(255)
+  price   Int
+}
+
+model companies {
+  name       String @id @db.VarChar(50)
+  label      String @db.VarChar(50)
+  investRate Float? @db.Float
+  rate       String @default("stale") @db.VarChar(10)
+}
+
+model datastore {
+  name   String @id @db.VarChar(60)
+  label  String @db.VarChar(100)
+  shared Int
+}
+
+model datastore_data {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(60)
+  owner String? @db.VarChar(46)
+  data  String? @db.LongText
+
+  @@unique([name, owner], map: "index_datastore_data_name_owner")
+  @@index([name], map: "index_datastore_data_name")
+}
+
+model fine_types {
+  id       Int     @id @default(autoincrement())
+  label    String? @db.VarChar(255)
+  amount   Int?
+  category Int?
+}
+
+model invest {
+  id         Int       @id @default(autoincrement())
+  identifier String?   @db.VarChar(46)
+  amount     Float     @db.Float
+  rate       Float     @db.Float
+  job        String    @db.VarChar(50)
+  active     Boolean   @default(true)
+  created    DateTime  @default(now()) @db.DateTime(0)
+  sold       DateTime? @db.DateTime(0)
+  soldAmount Float?    @db.Float
+}
+
+model items {
+  name       String @id @db.VarChar(50)
+  label      String @db.VarChar(50)
+  weight     Int    @default(1)
+  rare       Int    @default(0) @db.TinyInt
+  can_remove Int    @default(1) @db.TinyInt
+}
+
+model job_grades {
+  id          Int     @id @default(autoincrement())
+  job_name    String? @db.VarChar(50)
+  grade       Int
+  name        String  @db.VarChar(50)
+  label       String  @db.VarChar(50)
+  salary      Int
+  skin_male   String  @db.LongText
+  skin_female String  @db.LongText
+}
+
+model jobs {
+  name        String  @id @db.VarChar(50)
+  label       String? @db.VarChar(50)
+  whitelisted Boolean @default(false)
+}
+
+model licenses {
+  type  String @id @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model multicharacter_slots {
+  identifier String @id @db.VarChar(46)
+  slots      Int
+
+  @@index([slots], map: "slots")
+}
+
+model owned_vehicles {
+  owner    String? @db.VarChar(46)
+  plate    String  @id @db.VarChar(12)
+  vehicle  String  @db.LongText
+  type     String  @default("car") @db.VarChar(20)
+  job      String  @default("civ") @db.VarChar(20)
+  category String? @db.VarChar(50)
+  name     String  @default("Unknown") @db.VarChar(60)
+  fuel     Int     @default(100)
+  stored   Boolean @default(false)
+  image    String? @db.LongText
+}
+
+model rented_vehicles {
+  vehicle     String  @db.VarChar(60)
+  plate       String  @id @db.VarChar(12)
+  player_name String  @db.VarChar(255)
+  base_price  Int
+  rent_price  Int
+  owner       String? @db.VarChar(46)
+}
+
+model society_moneywash {
+  id         Int     @id @default(autoincrement())
+  identifier String? @db.VarChar(46)
+  society    String  @db.VarChar(60)
+  amount     Int
+}
+
+model user_contacts {
+  id         Int     @id @default(autoincrement())
+  identifier String? @db.VarChar(46)
+  name       String  @db.VarChar(100)
+  number     Int
+
+  @@index([identifier, name, number], map: "index_user_contacts_identifier_name_number")
+}
+
+model user_licenses {
+  id    Int     @id @default(autoincrement())
+  type  String  @db.VarChar(60)
+  owner String? @db.VarChar(46)
+}
+
+model users {
+  identifier       String   @id @db.VarChar(46)
+  accounts         String?  @db.LongText
+  group            String?  @default("user") @db.VarChar(50)
+  inventory        String?  @db.LongText
+  job              String?  @default("unemployed") @db.VarChar(20)
+  job_grade        Int?     @default(0)
+  loadout          String?  @db.LongText
+  position         String?  @default("{\"x\":-269.4,\"y\":-955.3,\"z\":31.2,\"heading\":205.8}") @db.VarChar(255)
+  firstname        String?  @db.VarChar(16)
+  lastname         String?  @db.VarChar(16)
+  dateofbirth      String?  @db.VarChar(10)
+  sex              String?  @db.VarChar(1)
+  height           Int?
+  skin             String?  @db.LongText
+  status           String?  @db.LongText
+  is_dead          Boolean? @default(false)
+  id               Int      @unique(map: "id") @default(autoincrement())
+  disabled         Boolean? @default(false)
+  last_property    String?  @db.VarChar(255)
+  web_password_raw String?  @db.VarChar(255)
+  phone_number     String?  @db.VarChar(10)
+}
+
+model vehicle_categories {
+  name  String @id @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vehicle_sold {
+  client String @db.VarChar(50)
+  model  String @db.VarChar(50)
+  plate  String @id @db.VarChar(50)
+  soldby String @db.VarChar(50)
+  date   String @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model vehicles {
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+
+  @@ignore
+}
+
+model vs_aircraft_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_aircrafts {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_ambulance {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_ambulance_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_boat_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_boats {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_car_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_cars {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_division_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_divisions {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_mechanic {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_mechanic_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_police {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_police_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_taxi {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_taxi_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_truck_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_trucks {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_vipaircraft_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_vipaircrafts {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_vipboat_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_vipboats {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model vs_vipcar_categories {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  label String @db.VarChar(60)
+}
+
+model vs_vipcars {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(60)
+  model    String  @db.VarChar(60)
+  price    Int
+  category String? @db.VarChar(60)
+  image    String? @db.Text
+}
+
+model whitelist {
+  identifier String @id @db.VarChar(46)
+}
+
+model owned_properties {
+  id            Int     @id @default(autoincrement()) @db.UnsignedInt
+  name          String  @db.VarChar(255)
+  price         Float
+  rented        Int
+  owner         String? @db.VarChar(46)
+  shared        String  @default("0") @db.VarChar(60)
+  arleady_owned Int     @default(0)
+}
+
+model properties {
+  id         Int     @id @default(autoincrement())
+  name       String? @db.VarChar(255)
+  label      String? @db.VarChar(255)
+  entering   String? @db.VarChar(255)
+  exit       String? @db.VarChar(255)
+  inside     String? @db.VarChar(255)
+  outside    String? @db.VarChar(255)
+  ipls       String? @default("[]") @db.VarChar(255)
+  gateway    String? @db.VarChar(255)
+  is_single  Int?
+  is_room    Int?
+  is_gateway Int?
+  room_menu  String? @db.VarChar(255)
+  inventory  String? @db.VarChar(255)
+  cloakroom  String? @db.VarChar(255)
+  price      Int
+}
+
+model banking {
+  identifier String?   @db.VarChar(46)
+  type       String?   @db.VarChar(50)
+  amount     Int?
+  time       DateTime? @db.Date
+  id         Int       @id @default(autoincrement())
+}
+
+model web_vehicle_marketplace {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  vehicle    String   @db.LongText
+  plate      String   @db.VarChar(12)
+  model_name String   @db.VarChar(255)
+  image      String   @db.LongText
+  owner      String   @db.VarChar(46)
+}
+
+model phone_app_chat {
+  id      Int      @id @default(autoincrement())
+  channel String   @db.VarChar(20)
+  message String   @db.VarChar(255)
+  time    DateTime @default(now()) @db.Timestamp(0)
+}
+
+model phone_calls {
+  id       Int      @id @default(autoincrement())
+  owner    String?  @db.VarChar(46)
+  num      String   @db.VarChar(10)
+  incoming Int
+  time     DateTime @default(now()) @db.Timestamp(0)
+  accepts  Int
+}
+
+model phone_messages {
+  id          Int      @id @default(autoincrement())
+  transmitter String   @db.VarChar(10)
+  receiver    String   @db.VarChar(10)
+  message     String   @default("0") @db.VarChar(255)
+  time        DateTime @default(now()) @db.Timestamp(0)
+  isRead      Int      @default(0)
+  owner       Int      @default(0)
+}
+
+model phone_users_contacts {
+  id         Int     @id @default(autoincrement())
+  identifier String? @db.VarChar(46)
+  number     String? @db.VarChar(10)
+  display    String  @default("-1") @db.VarChar(64)
+}
+
+model twitter_accounts {
+  id             Int              @id @default(autoincrement())
+  username       String           @unique(map: "username") @default("0") @db.VarChar(50)
+  password       String           @default("0") @db.VarChar(64)
+  avatar_url     String?          @db.VarChar(255)
+  twitter_likes  twitter_likes[]
+  twitter_tweets twitter_tweets[]
+}
+
+model twitter_likes {
+  id               Int               @id @default(autoincrement())
+  authorId         Int?
+  tweetId          Int?
+  twitter_accounts twitter_accounts? @relation(fields: [authorId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_twitter_likes_twitter_accounts")
+  twitter_tweets   twitter_tweets?   @relation(fields: [tweetId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "FK_twitter_likes_twitter_tweets")
+
+  @@index([authorId], map: "FK_twitter_likes_twitter_accounts")
+  @@index([tweetId], map: "FK_twitter_likes_twitter_tweets")
+}
+
+model twitter_tweets {
+  id               Int              @id @default(autoincrement())
+  authorId         Int
+  realUser         String?          @db.VarChar(50)
+  message          String           @db.VarChar(256)
+  time             DateTime         @default(now()) @db.Timestamp(0)
+  likes            Int              @default(0)
+  twitter_accounts twitter_accounts @relation(fields: [authorId], references: [id], onUpdate: Restrict, map: "FK_twitter_tweets_twitter_accounts")
+  twitter_likes    twitter_likes[]
+
+  @@index([authorId], map: "FK_twitter_tweets_twitter_accounts")
+}

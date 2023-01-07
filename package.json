@@ -1,0 +1,46 @@
+{
+  "name": "fivem-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 13444",
+    "build": "next build",
+    "start": "next start -p 13444",
+    "lint": "next lint",
+    "pulldb": "npx prisma db pull",
+    "migrate": "npx prisma migrate"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/material": "^5.10.4",
+    "@prisma/client": "^4.3.1",
+    "axios": "^0.27.2",
+    "babel-plugin-superjson-next": "^0.4.4",
+    "bcrypt": "^5.0.1",
+    "cfx-api": "^1.0.122",
+    "fivem-server": "^1.0.1",
+    "fivem-server-api": "^1.0.4",
+    "ioredis": "^5.2.3",
+    "iron-session": "^6.2.0",
+    "moment": "^2.29.4",
+    "next": "12.2.5",
+    "next-transpile-modules": "^9.0.0",
+    "node-fetch": "^3.2.10",
+    "randexp": "^0.5.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "superjson": "^1.9.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "18.7.15",
+    "@types/react": "18.0.18",
+    "@types/react-dom": "18.0.6",
+    "eslint": "8.23.0",
+    "eslint-config-next": "12.2.5",
+    "prisma": "^4.3.1",
+    "typescript": "4.8.2"
+  }
+}

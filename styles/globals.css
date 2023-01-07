@@ -1,0 +1,14 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Gentium, Book Plus', serif;
+  overflow-x: hidden;
+}
+
+@import "https://fonts.googleapis.com/css2?family=Gentium+Book+Plus&display=swap";

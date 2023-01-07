@@ -1,0 +1,5 @@
+.next
+node_modules
+.env
+s30_db1-150922-backup.sql
+my.todo
