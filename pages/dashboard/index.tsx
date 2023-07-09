@@ -782,7 +782,7 @@ export const getServerSideProps = withSessionSsr(
     const jobDetails = await getJobDetails.getValue(user.job || '', user.job_grade || 0)
 
     const cfxStatus = await getCFXStatus()
-      
+
     return {
       props: {
         user,
@@ -795,7 +795,7 @@ export const getServerSideProps = withSessionSsr(
         userBanking,
         userProperties: userProperties.map((p) => ({
           ...p,
-          label: properties.find((p2) => p2.name === p.name)?.label,
+          label: `properties?.find((p2) => p2.name === p.name)?.label`,
         })),
 
         cfxStatus,

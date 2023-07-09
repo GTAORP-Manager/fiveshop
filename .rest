@@ -1,4 +1,4 @@
 POST https://fiveshop.trebossa.me/api/auth/login
 
 lastname: test
-password: test
+password: test!
