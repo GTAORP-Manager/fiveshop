@@ -1,5 +1,6 @@
 # Fiveshop
 Fiveshop features an online dashboard for your GTA5-FiveM character!
+Documentation is incomplete.
 
 
 ## Feature-list
